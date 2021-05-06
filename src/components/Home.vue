@@ -50,7 +50,9 @@
               <th>Status</th>
               <th>Values</th>
               <th class="text-right">Change</th>
-              <th class="text-right">Actions</th>
+              <th class="text-right">Actions <input v-model="value" type="number" placeholder="value">
+              </th>
+
             </tr>
             </thead>
             <tbody>
@@ -60,16 +62,19 @@
               <td><span class="badge badge-success">ONLINE</span></td>
               <td>{{ server.values }}</td>
               <td class="text-right">{{ server.change }}</td>
-              <td class="td-actions text-right">
-                <input v-model="value" type="number" placeholder="value">
 
-                <button type="button"  @click="sendValue(server.serverName)" rel="tooltip" class="btn btn-primary btn-sm " data-original-title="" title="">
+              <td class="td-actions text-right">
+
+                <button type="button" @click="sendValue(server.serverName)" rel="tooltip"
+                        class="btn btn-primary btn-sm " data-original-title="" title="">
                   ADD
                 </button>
-                <button type="button" rel="tooltip" @click="deleteValue(server.serverName)" class="btn btn-primary btn-sm "  data-original-title="" title="">
+                <button type="button" rel="tooltip" @click="deleteValue(server.serverName)"
+                        class="btn btn-primary btn-sm " data-original-title="" title="">
                   REMOVE
                 </button>
-                <button type="button" rel="tooltip" class="btn btn-danger btn-icon btn-sm " @click="turnOff(server.serverName)"
+                <button type="button" rel="tooltip" class="btn btn-danger btn-icon btn-sm "
+                        @click="turnOff(server.serverName)"
                         data-original-title=""
                         title=""> OFF
                   <i class="ni ni-button-power"></i>
@@ -135,6 +140,12 @@ export default {
     }
   },
   methods: {
+    async getConfiguration() {
+      await axios.get("http://localhost:8080/server/configurationSimple")
+        .then(result => this.servers = result.data.map(server => ({serverName: server})))
+
+      await this.servers.forEach(server => axios.get("http://" + server.serverName + "/values").then(result => server.values = result.data))
+    },
     sendValue(server) {
       axios.put('http://' + server + '/values/' + this.value).then(result => console.log(result))
     },
@@ -153,10 +164,8 @@ export default {
       this.servers = [...new Set(this.servers)]
 
       if (parsedEvent.state === 'CONNECTED') {
-
-
         const index = this.servers.findIndex(x => x.serverName === parsedEvent.serverName);
-        if(index === -1){
+        if (index === -1) {
           const obj = {
             serverName: parsedEvent.serverName
           };
@@ -167,7 +176,7 @@ export default {
       } else if (parsedEvent.state === 'DISCONNECTED') {
         const index = this.servers.findIndex(x => x.serverName === parsedEvent.serverName);
 
-        if(index > -1){
+        if (index > -1) {
           this.servers.splice(index, 1)
 
         }
@@ -175,10 +184,9 @@ export default {
     },
     handleValueMessage(msg) {
       let parseValues = JSON.parse(msg)
-
       if (parseValues.result !== undefined) {
+
         const index = this.servers.findIndex(x => x.serverName === parseValues.serverName);
-        this.servers.splice(index, 1)
 
         this.servers[index] = {
           serverName: parseValues.serverName,
@@ -199,7 +207,7 @@ export default {
     ValueSocket.$off("value", this.handleValueMessage)
   },
   beforeMount() {
-
+    this.getConfiguration()
   },
 
 }
