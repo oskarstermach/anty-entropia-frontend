@@ -26,6 +26,8 @@
                       <span class="btn-inner--text">Start new server</span>
                     </a>
                   </div>
+                  <br>
+                  <DebugLog/>
                 </div>
               </div>
             </div>
@@ -129,10 +131,12 @@
 import Socket from "./socket"
 import ValueSocket from "./ValueSocket";
 import axios from "axios";
+import DebugLog from "./DebugLog";
 
 
 export default {
   name: "HomePage",
+  components: {DebugLog},
   data() {
     return {
       servers: [],
