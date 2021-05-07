@@ -5,6 +5,8 @@ import App from './App'
 import router from './router'
 
 Vue.config.productionTip = false
+// To jest na event bus bo chciałem zobaczyć jak działa takie coś
+Vue.prototype.$eventHub = new Vue();
 
 import Vuex from 'vuex'
 

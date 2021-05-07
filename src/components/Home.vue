@@ -191,7 +191,16 @@ export default {
       if (parseValues.result !== undefined) {
 
         const index = this.servers.findIndex(x => x.serverName === parseValues.serverName);
-
+        console.log("emituje na eventhub o" + msg);
+        this.$eventHub.$emit('log-msg', {
+          timestamp: new Date(),
+          serverIndex: index,
+          serverName: parseValues.serverName,
+          changed: parseValues.change,
+          current: parseValues.result,
+          type: parseValues.type
+        });
+        console.log("wemitowane");
         this.servers[index] = {
           serverName: parseValues.serverName,
           values: parseValues.result,
