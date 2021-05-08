@@ -175,10 +175,11 @@ export default {
           };
           this.servers.push(obj)
           this.getServers()
-
+          // Inaczej zapisze index jako -1
+          const finalIndex = this.servers.findIndex(x => x.serverName === parsedEvent.serverName);
           this.$eventHub.$emit('log-state', {
             timestamp: new Date(),
-            serverIndex: index,
+            serverIndex: finalIndex,
             serverName: parsedEvent.serverName,
             type: parsedEvent.state
           });
