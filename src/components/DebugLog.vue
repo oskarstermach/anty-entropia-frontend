@@ -18,9 +18,12 @@ export default {
     }
   },
   created() {
+    console.log("created");
     this.$eventHub.$on('log-msg', this.addValueMsgToLog);
+    this.$eventHub.$on('log-state', this.addStateMsgToLog);
   },
   mounted() {
+    console.log("mounted")
     let retrievedData = this.openStorage();
     if (retrievedData) {
       this.counter = retrievedData.counter;
@@ -29,10 +32,10 @@ export default {
     this.$refs.logbox.value = this.logArchive;
   },
   beforeDestroy() {
-    console.log("beforeDestroy")
-    // Ten log w localstorage przetrwa odświeżanie strony, ale ponowne uruchomienie apki już nie
-    // (hot reload z ide też nie)
     this.$eventHub.$off('log-msg');
+    this.$eventHub.$off('log-state');
+    console.log("beforeDestroy - removing from local storage")
+    // Ten log w localstorage przetrwa odświeżanie strony, ale hot reload z ide nie
     localStorage.removeItem('log_data');
   },
   methods: {
@@ -47,17 +50,19 @@ export default {
         logText += "Usunięto " + msg.changed + this.separator;
       }
       logText += ("[" + msg.current + "]");
-      this.counter++;
-      this.logArchive += logText + "\n";
-      this.$refs.logbox.value = this.logArchive;
-      console.log({
-        counter: this.counter,
-        logArchive: this.logArchive
-      });
-      this.saveStorage({
-        counter: this.counter,
-        logArchive: this.logArchive
-      });
+      this.updateLogArchive(logText)
+    },
+    addStateMsgToLog(msg) {
+      console.log("addToLog uruchomione");
+      let logText = this.counter + this.separator
+        + this.formatTimestamp(msg.timestamp) + this.separator
+        + msg.serverIndex + " - " + msg.serverName + this.separator;
+      if (msg.type === "CONNECTED") {
+        logText += "Połączony";
+      } else if (msg.type === "DISCONNECTED") {
+        logText += "Rozłączony";
+      }
+      this.updateLogArchive(logText)
     },
     formatTimestamp(stamp) {
       return stamp.getHours() + ":" + stamp.getMinutes() + ":" + stamp.getSeconds() + "." + stamp.getMilliseconds()
@@ -68,6 +73,16 @@ export default {
     saveStorage (data) {
       localStorage.setItem('log_data', JSON.stringify(data));
     },
+    updateLogArchive(logText) {
+      console.log("updating log archive")
+      this.counter++;
+      this.logArchive += logText + "\n";
+      this.$refs.logbox.value = this.logArchive;
+      this.saveStorage({
+        counter: this.counter,
+        logArchive: this.logArchive
+      });
+    }
   }
 }
 </script>

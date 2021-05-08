@@ -175,23 +175,39 @@ export default {
           };
           this.servers.push(obj)
           this.getServers()
-        }
 
+          this.$eventHub.$emit('log-state', {
+            timestamp: new Date(),
+            serverIndex: index,
+            serverName: parsedEvent.serverName,
+            type: parsedEvent.state
+          });
+          console.log("wemitowany connect");
+        }
       } else if (parsedEvent.state === 'DISCONNECTED') {
         const index = this.servers.findIndex(x => x.serverName === parsedEvent.serverName);
 
         if (index > -1) {
           this.servers.splice(index, 1)
 
+          this.$eventHub.$emit('log-state', {
+            timestamp: new Date(),
+            serverIndex: index,
+            serverName: parsedEvent.serverName,
+            type: parsedEvent.state
+          });
+          console.log("wemitowany disconnect");
         }
+
       }
+
     },
     handleValueMessage(msg) {
       let parseValues = JSON.parse(msg)
       if (parseValues.result !== undefined) {
 
         const index = this.servers.findIndex(x => x.serverName === parseValues.serverName);
-        console.log("emituje na eventhub o" + msg);
+        console.log("emituje na eventhub");
         this.$eventHub.$emit('log-msg', {
           timestamp: new Date(),
           serverIndex: index,
@@ -199,6 +215,7 @@ export default {
           changed: parseValues.change,
           current: parseValues.result,
           type: parseValues.type
+
         });
         console.log("wemitowane");
         this.servers[index] = {
