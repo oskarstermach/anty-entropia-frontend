@@ -28,7 +28,7 @@ export default {
   name: "DebugLog",
   data() {
     return {
-      separator: '; ',
+      separator: ' | ',
       counter: 1,
       logArchive: "",
       show: true
