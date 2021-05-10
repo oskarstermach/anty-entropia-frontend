@@ -20,6 +20,11 @@
       {{show ? "HIDE LOG" : "SHOW LOG"}}
     </button>
 
+    <button type="button" @click="clearBox()" rel="tooltip"
+           class="btn btn-success btn-sm " data-original-title="" title="">
+       CLEAR
+    </button>
+
   </div>
 </template>
 
@@ -120,7 +125,13 @@ export default {
           document.body.removeChild(link)
         }
       }
+    },
+
+    clearBox(){
+      this.logArchive = ' ';
+      this.$refs.logbox.value = this.logArchive;
     }
+
   }
 }
 </script>
