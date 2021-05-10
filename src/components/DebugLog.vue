@@ -4,7 +4,7 @@
   <div>
     <div class="solid" v-show="show">
       <div>
-      <textarea id="debuglog" name="debuglog" ref="logbox" rows="5" cols="60" wrap="soft" readonly="readonly">
+      <textarea id="debuglog" style="overflow:hidden" name="debuglog" ref="logbox" rows="5" cols="60" wrap="soft" readonly="readonly">
       </textarea>
       </div>
       <div>
@@ -60,7 +60,7 @@ export default {
     // Ten log w localstorage przetrwa odświeżanie strony, ale hot reload z ide nie
     localStorage.removeItem('log_data');
   },
-  // TODO Dodać może też czyszczenie przy zamknięciu strony?
+  
   methods: {
     addValueMsgToLog(msg) {
       console.log("addToLog uruchomione");
@@ -147,7 +147,29 @@ textarea
   overflow-x: scroll;
   max-width: 100%;
   font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  font-size: 12px;
+  font-size: 14px;
+
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+  border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+  border-image: none;
+  border-radius: 6px 6px 6px 6px;
+  border-style: none solid solid none;
+  border-width: medium 1px 1px medium;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+  color: #ffffff;
+  font-weight: bold;
+  line-height: 1.4em;
+  padding: 5px 8px;
+  transition: background-color 0.2s ease 0s;
+}
+
+textarea:focus {
+    background: none repeat scroll 0 0 #FFFFFF;
+    outline-width: 0;
 }
 </style>
 
