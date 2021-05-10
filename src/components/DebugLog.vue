@@ -1,10 +1,8 @@
-// TODO Dodać styl do textarea i wyłączyć zawijanie; Dodać ukrywanie i pokazywanie logu;
-// Może zmienić czcionkę na bardziej konsolową
 <template>
   <div>
     <div class="solid" v-show="show">
       <div>
-      <textarea id="debuglog" style="overflow:hidden" name="debuglog" ref="logbox" rows="5" cols="60" wrap="soft" readonly="readonly">
+      <textarea id="debuglog" name="debuglog" ref="logbox" rows="5" cols="60" wrap="soft" readonly="readonly">
       </textarea>
       </div>
       <div>
@@ -141,13 +139,14 @@ div.solid {border-style: solid;}
 textarea
 {
   display: inline-block;
-  resize: both;
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: scroll;
   max-width: 100%;
   font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
   font-size: 14px;
+  resize: both;
+  overflow: auto;
 
   -moz-border-bottom-colors: none;
   -moz-border-left-colors: none;
@@ -167,9 +166,5 @@ textarea
   transition: background-color 0.2s ease 0s;
 }
 
-textarea:focus {
-    background: none repeat scroll 0 0 #FFFFFF;
-    outline-width: 0;
-}
 </style>
 
