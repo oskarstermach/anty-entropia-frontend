@@ -22,8 +22,8 @@
                   <h1 class="text-white display-2">Spójność ostateczna: anty-entropia</h1>
                   <h2 class="display-4 font-weight-normal text-white">System powinien się składać z 11 serwerów</h2>
                   <div class="btn-wrapper mt-4">
-                    <a href="" class="btn btn-success btn-icon mt-3 mb-sm-0">
-                      <span class="btn-inner--text">Start new server</span>
+                    <a @click="$router.push('graph')" class="btn btn-success btn-icon mt-3 mb-sm-0">
+                      <span class="btn-inner--text" >SHOW GRAPH</span>
                     </a>
                   </div>
                   <br>
@@ -151,10 +151,20 @@ export default {
       await this.servers.forEach(server => axios.get("http://" + server.serverName + "/values").then(result => server.values = result.data))
     },
     sendValue(server) {
-      axios.put('http://' + server + '/values/' + this.value).then(result => console.log(result))
+      axios.post('http://' + server + '/values', {
+        value: this.value,
+        type: 'ADDED',
+        origin: server,
+        from: 'FRONTEND'
+      }).then(result => console.log(result))
     },
     deleteValue(server) {
-      axios.delete('http://' + server + '/values/' + this.value).then(result => console.log(result))
+      axios.post('http://' + server + '/values', {
+        value: this.value,
+        type: 'DELETED',
+        origin: server,
+        from: 'FRONTEND'
+      }).then(result => console.log(result))
     },
     turnOff(server) {
       axios.post('http://' + server + '/actuator/shutdown').then(result => console.log(result))
