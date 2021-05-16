@@ -1,5 +1,3 @@
-// TODO Dodać styl do textarea i wyłączyć zawijanie; Dodać ukrywanie i pokazywanie logu;
-// Może zmienić czcionkę na bardziej konsolową
 <template>
   <div>
     <div class="solid" v-show="show">
@@ -18,6 +16,11 @@
     <button type="button" @click="show = !show" rel="tooltip"
             class="btn btn-default btn-sm " data-original-title="" title="">
       {{show ? "HIDE LOG" : "SHOW LOG"}}
+    </button>
+
+    <button type="button" @click="clearBox()" rel="tooltip"
+           class="btn btn-success btn-sm " data-original-title="" title="">
+       CLEAR
     </button>
 
   </div>
@@ -55,7 +58,7 @@ export default {
     // Ten log w localstorage przetrwa odświeżanie strony, ale hot reload z ide nie
     localStorage.removeItem('log_data');
   },
-  // TODO Dodać może też czyszczenie przy zamknięciu strony?
+  
   methods: {
     addValueMsgToLog(msg) {
       console.log("addToLog uruchomione");
@@ -120,7 +123,13 @@ export default {
           document.body.removeChild(link)
         }
       }
+    },
+
+    clearBox(){
+      this.logArchive = ' ';
+      this.$refs.logbox.value = this.logArchive;
     }
+
   }
 }
 </script>
@@ -130,13 +139,32 @@ div.solid {border-style: solid;}
 textarea
 {
   display: inline-block;
-  resize: both;
   white-space: pre;
   overflow-wrap: normal;
   overflow-x: scroll;
   max-width: 100%;
   font-family: Menlo,Monaco,Consolas,"Liberation Mono","Courier New",monospace;
-  font-size: 12px;
+  font-size: 14px;
+  resize: both;
+  overflow: auto;
+
+  -moz-border-bottom-colors: none;
+  -moz-border-left-colors: none;
+  -moz-border-right-colors: none;
+  -moz-border-top-colors: none;
+  background: none repeat scroll 0 0 rgba(0, 0, 0, 0.07);
+  border-color: -moz-use-text-color #FFFFFF #FFFFFF -moz-use-text-color;
+  border-image: none;
+  border-radius: 6px 6px 6px 6px;
+  border-style: none solid solid none;
+  border-width: medium 1px 1px medium;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.12) inset;
+  color: #ffffff;
+  font-weight: bold;
+  line-height: 1.4em;
+  padding: 5px 8px;
+  transition: background-color 0.2s ease 0s;
 }
+
 </style>
 
